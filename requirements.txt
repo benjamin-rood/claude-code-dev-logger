@@ -1,0 +1,10 @@
+# Claude Code Dev Logger - No external dependencies required
+# This package uses only Python standard library modules
+
+# Development dependencies (optional)
+# Install with: pip install -e ".[dev]"
+# pytest>=6.0
+# pytest-cov
+# black  
+# flake8
+# mypy

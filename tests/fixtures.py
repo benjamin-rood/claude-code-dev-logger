@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test fixtures and mock data for claude-code-dev-logger tests
+Test fixtures and mock data for claude_logger tests
 """
 import json
 from datetime import datetime
