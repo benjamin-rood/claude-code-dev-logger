@@ -1,24 +1,21 @@
 # Claude Code Dev Logger
 
-A professional Python package for comprehensive logging and analysis of Claude Code CLI conversations, with methodology tracking, creative energy measurement, and statistical comparison between development approaches.
+A high-performance Rust implementation for comprehensive logging and analysis of Claude Code CLI conversations, with methodology tracking, creative energy measurement, and statistical comparison between development approaches.
 
 ## 🚀 Installation
 
-### Via pip (Recommended)
-```bash
-pip install -e .
-```
-
-### Via setup script
-```bash
-./scripts/install.sh
-```
-
-### Manual installation
+### From Source (Recommended)
 ```bash
 git clone https://github.com/benjamin-rood/claude-code-dev-logger.git
-cd claude-code-dev-logger
-python setup.py install
+cd claude-code-dev-logger/claude-logger
+cargo install --path .
+```
+
+### Development Build
+```bash
+cd claude-logger
+cargo build --release
+# Binary will be in target/release/claude-logger
 ```
 
 ## 📖 Usage
@@ -29,32 +26,31 @@ python setup.py install
 # Run Claude with logging and energy tracking
 claude-logger --track-energy [claude arguments]
 
-# Analyze existing sessions 
-claude-logger --analyze
+# Analyze existing sessions with comparative methodology analysis
+claude-logger analyze --comparative
+
+# Analyze sessions by specific methodology
+claude-logger analyze --methodology context-driven
 
 # List all logged sessions
-claude-logger --list-sessions
+claude-logger list --limit 10
 
 # Show git history of sessions
-claude-logger --git-log
+claude-logger git-log --count 10
 
 # View a specific session
-claude-logger --show-session SESSION_ID
+claude-logger show SESSION_ID --full
 ```
 
-### Python API
+### Direct Binary Usage
 
-```python
-from claude_logger import ClaudeLogger, SessionAnalyzer
+```bash
+# After building, run directly from target
+./target/release/claude-logger --help
 
-# Create logger instance
-logger = ClaudeLogger()
-
-# Create analyzer instance  
-analyzer = SessionAnalyzer()
-
-# Generate methodology comparison report
-analyzer.generate_report()
+# Or install globally and use anywhere
+cargo install --path .
+claude-logger --version
 ```
 
 ## 🏗️ Architecture

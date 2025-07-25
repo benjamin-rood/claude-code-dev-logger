@@ -1,0 +1,225 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is the Claude Code Dev Logger - a professional Python package for comprehensive logging and analysis of Claude Code CLI conversations. The project focuses on tracking development methodologies, creative energy levels, and conversation patterns to help developers understand their coding workflow effectiveness.
+
+## Architecture
+
+The codebase is now organized as a proper Python package with clear separation of concerns:
+
+### Package Structure
+
+```
+claude-code-dev-logger/
+├── claude_logger/           # Main package
+│   ├── __init__.py         # Package exports (ClaudeLogger, SessionAnalyzer)
+│   ├── logger.py           # Core logging functionality (ClaudeLogger class)
+│   ├── analyzer.py         # Session analysis (SessionAnalyzer class)
+│   └── cli.py              # Command-line interface
+├── tests/                   # Comprehensive test suite
+│   ├── test_logger.py      # Logger tests (unit + integration)
+│   ├── test_analyzer.py    # Analyzer tests (unit + pattern matching)
+│   └── fixtures.py         # Test data and helper functions
+├── docs/                    # Documentation
+├── scripts/                 # Utility scripts (install.sh)
+├── setup.py                # Package installation configuration
+└── requirements.txt        # Dependencies (none - stdlib only)
+```
+
+### Core Components
+
+1. **ClaudeLogger** (`claude_logger.logger.py`):
+   - Main wrapper that proxies Claude CLI calls via subprocess
+   - Handles session creation, logging, and metadata management
+   - Integrates with git for version control of conversation logs
+   - Tracks methodology detection via `.claude/CLAUDE.md` files
+   - Manages creative energy tracking and user prompts
+   - Methods: `load_metadata()`, `save_metadata()`, `create_session_log()`, `run_logged_session()`, `git_commit_session()`
+
+2. **SessionAnalyzer** (`claude_logger.analyzer.py`):
+   - Analyzes logged conversation transcripts using regex patterns
+   - Performs statistical analysis and methodology comparison
+   - Generates comprehensive reports with effectiveness metrics
+   - Calculates conversation quality indicators
+   - Methods: `analyze_log_file()`, `compare_methodologies()`, `generate_report()`
+
+3. **CLI Interface** (`claude_logger.cli.py`):
+   - Command-line wrapper around core functionality
+   - Provides convenient access to logging and analysis features
+   - Supports all original command-line arguments
+   - Entry point: `claude-logger` command after installation
+
+### Data Flow
+
+1. User runs `claude-logger` command (or `python -m claude_logger.cli`)
+2. Logger creates session metadata and log file in `~/.claude-logs/`
+3. Real Claude CLI is executed via `script` command to capture full terminal output
+4. Session ends with optional creative energy prompt
+5. Metadata saved to JSON and committed to git repository
+6. Analysis can be run via `claude-logger --analyze` to analyze patterns across sessions
+
+## Development Commands
+
+### Installation and Setup
+
+```bash
+# Install package in development mode
+pip install -e .
+
+# Install with development dependencies
+pip install -e ".[dev]"
+
+# Run installation script
+./scripts/install.sh
+```
+
+### Running the Package
+
+```bash
+# Run with logging and energy tracking
+claude-logger --track-energy [claude arguments]
+
+# Analyze existing sessions
+claude-logger --analyze
+
+# List all sessions
+claude-logger --list-sessions
+
+# Show git history
+claude-logger --git-log
+
+# View specific session
+claude-logger --show-session SESSION_ID
+
+# Get help
+claude-logger --help
+```
+
+### Alternative Python Module Usage
+
+```bash
+# Run CLI as module
+python -m claude_logger.cli --help
+
+# Use in Python code
+python -c "from claude_logger import ClaudeLogger, SessionAnalyzer; analyzer = SessionAnalyzer(); analyzer.generate_report()"
+```
+
+### Testing and Development
+
+```bash
+# Run all tests
+python -m unittest discover tests/ -v
+
+# Run specific test files
+python -m unittest tests.test_logger -v
+python -m unittest tests.test_analyzer -v
+
+# Run individual test classes
+python -m unittest tests.test_logger.TestClaudeLogger -v
+python -m unittest tests.test_analyzer.TestSessionAnalyzerPatterns -v
+
+# Test package imports
+python -c "from claude_logger import ClaudeLogger, SessionAnalyzer; print('✅ Imports work')"
+
+# Test CLI functionality
+python -m claude_logger.cli --help
+```
+
+### Code Quality
+
+```bash
+# Format code (if black is installed)
+black claude_logger/ tests/
+
+# Lint code (if flake8 is installed)  
+flake8 claude_logger/ tests/
+
+# Type checking (if mypy is installed)
+mypy claude_logger/
+```
+
+## Key Technical Details
+
+### Package Imports
+
+The package exports two main classes:
+```python
+from claude_logger import ClaudeLogger, SessionAnalyzer
+
+# Or import specific modules
+from claude_logger.logger import ClaudeLogger
+from claude_logger.analyzer import SessionAnalyzer
+```
+
+### Methodology Detection
+The logger automatically detects development methodology by reading `.claude/CLAUDE.md` in the current working directory:
+- Contains "Context-Driven" → `context-driven`
+- Contains "Spec-Driven" → `command-based`  
+- Otherwise → `unknown`
+
+### Log Storage Structure
+- All logs stored in `~/.claude-logs/`
+- Git repository automatically initialized
+- Naming convention: `claude_[project]_[methodology]_[timestamp].log`
+- Metadata tracked in `sessions_metadata.json`
+
+### Session Analysis Patterns
+The analyzer uses regex patterns to identify:
+- **Enthusiasm markers**: "excellent!", "great!", "🎉"
+- **Confusion markers**: "that's not", "wait", "let me clarify"
+- **Compaction indicators**: "as we discussed", "remember when"
+- **Code blocks**: ``` markers for programming activity tracking
+
+### Git Integration
+Each session automatically commits to git with structured commit messages including:
+- Methodology and project name
+- Session duration and creative energy level
+- Session ID and command executed
+
+### Test Coverage
+
+The package includes 23+ working tests across multiple categories:
+- **Unit tests**: Individual method validation with proper mocking
+- **Integration tests**: End-to-end workflow validation with real files
+- **Pattern matching tests**: Regex validation for conversation analysis
+- **CLI tests**: Command-line interface validation
+
+All tests use isolated temporary directories and proper mocking to avoid side effects.
+
+## Dependencies
+
+The package uses only Python standard library modules (no external dependencies):
+- `subprocess` - for running Claude CLI and git commands
+- `json` - for metadata storage
+- `argparse` - for command-line interface
+- `pathlib` - for file system operations
+- `datetime` - for timestamps
+- `re` - for pattern matching in analysis
+- `statistics` - for calculating averages
+- `tempfile` - for test isolation
+- `unittest` - for testing framework
+- `os` - for environment operations
+
+## Installation as Package
+
+The project can now be installed as a proper Python package:
+
+```bash
+# Development installation
+pip install -e .
+
+# This creates the claude-logger console command
+# and makes imports available: from claude_logger import ClaudeLogger
+```
+
+## Professional Structure Benefits
+
+1. **Maintainable**: Clear separation of concerns and organized codebase
+2. **Testable**: Comprehensive test suite with proper import structure
+3. **Installable**: Can be distributed via pip and PyPI
+4. **Scalable**: Proper package structure supports future growth
+5. **Professional**: Follows Python packaging best practices and PEP standards
